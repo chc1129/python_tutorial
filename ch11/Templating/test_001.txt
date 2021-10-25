@@ -1,0 +1,42 @@
+Python 3.8.5 (default, Jan 27 2021, 15:41:15)
+[GCC 9.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from string import Template
+>>> t = Template('${village}folk send $$10 to $cause.')
+>>> t.substitute(village='Nottingham', cause='the ditch fund')
+'Nottinghamfolk send $10 to the ditch fund.'
+>>> t = Template('Return the $item to $owner.')
+>>> d = dict(item='unladen swallow')
+>>> t.substitute(d)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python3.8/string.py", line 126, in substitute
+    return self.pattern.sub(convert, self.template)
+  File "/usr/lib/python3.8/string.py", line 119, in convert
+    return str(mapping[named])
+KeyError: 'owner'
+>>> t.safe_substitute(d)
+'Return the unladen swallow to $owner.'
+>>> import time, os.path
+>>> photofiles = ['img_1074.jpg', 'img_1076.jpg', 'img_1077.jpg']
+>>> class BatchRename(Template):
+...     delimiter = '%'
+...
+>>> fmt = input('Enter rename style (%d-date %n-seqnum %f-format):  ')
+Enter rename style (%d-date %n-seqnum %f-format):
+>>> t = BatchRename(fmt)
+>>>  date = time.strftime('%d%b%y')
+  File "<stdin>", line 1
+    date = time.strftime('%d%b%y')
+    ^
+IndentationError: unexpected indent
+>>> date = time.strftime('%d%b%y')
+>>> for i, filename in enumerate(photofiles):
+...     base, ext = os.path.splitext(filename)
+...     newname = t.substitute(d=date, n=i, f=ext)
+...     print('{0} --> {1}'.format(filename, newname))
+...
+img_1074.jpg -->
+img_1076.jpg -->
+img_1077.jpg -->
+>>>
