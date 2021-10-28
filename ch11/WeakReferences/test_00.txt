@@ -1,0 +1,29 @@
+$ py
+Python 3.8.5 (default, Jan 27 2021, 15:41:15)
+[GCC 9.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+>>> import weakref, gc
+>>> class A:
+...     def __init__(self, value):
+...             self.value = value
+...     def __repr__(self):
+...             return str(self.value)
+...
+>>> a = A(10)                   # create a reference
+>>> d = weakref.WeakValueDictionary()
+>>> d['primary'] = a            # does not create a reference
+>>> d['primary']                # fetch the object if it is still alive
+10
+>>> del a                       # remove the one reference
+>>> gc.collect()                # run garbage collection right away
+0
+>>> d['primary']                # entry was automatically removed
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/lib/python3.8/weakref.py", line 131, in __getitem__
+    o = self.data[key]()
+KeyError: 'primary'
+>>>
+>>> exit()
+
